@@ -1,4 +1,5 @@
 ﻿using System.Data.Entity;
+using System.Data.Entity.ModelConfiguration.Conventions;
 using Sitemap.Models.Poco;
 
 namespace Sitemap.Models.Context
@@ -13,5 +14,9 @@ namespace Sitemap.Models.Context
 
         public DbSet<Statistic> Statistics { get; set; }
         public DbSet<History> TimeResults { get; set; }
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+        }
     }
 }

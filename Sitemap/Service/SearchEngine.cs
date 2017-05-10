@@ -130,7 +130,7 @@ namespace Sitemap.Service
             try
             {
                 var urls = FindAllPageUrls(path);
-                urls = urls.Count > 30 ? urls.Take(30).ToList() : urls;
+           //     urls = urls.Count > 30 ? urls.Take(30).ToList() : urls;
                 var estimateTime = EstimateTime(urls.Skip(offset).Take(1).ToList());
                 foreach (var result in estimateTime)
                 {
