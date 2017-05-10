@@ -1,0 +1,95 @@
+﻿@model IList<Sitemap.Models.Poco.Result>
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width"/>
+    <link href="~/Content/bootstrap.css" rel="stylesheet"/>
+    <link href="~/Content/bootstrap-theme.css" rel="stylesheet"/>
+    <style>
+        body { background: #f1f1f1; }
+    </style>
+    <title>Chart</title>
+    <script src="http://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+</head>
+<body>
+<div>
+    <div id="chartContainer" style="height: 300px; width: 100%;">
+        <script type="text/javascript">
+
+            window.onload = function() {
+                var chart = new CanvasJS.Chart("chartContainer",
+                {
+                    zoomEnabled: true,
+                    theme: "theme2",
+                    animationEnabled: true,
+                    title: {
+                        text: "Page load speed"
+                    },
+                    subtitles: [
+                        { text: "" }
+                    ],
+                    axisX: {
+                        valueFormatString: " ",
+                        tickLength: 10,
+                        title: "Urls"
+                    },
+                    axisY: {
+                        title: "Speed, sec"
+                    },
+                    data: [
+                        {
+                            type: "column",
+                            dataPoints: [
+                                @for (var i = 0; i < Model.Count; i++)
+                                {
+                                    <text>
+                                        {
+                                            x: @i,
+                                            y: @Model[i].ResponseTime,
+                                            toolTipContent: "@Model[i].PageUrl ({y} sec)"
+                                        },
+                                    </text>
+                                }
+                            ]
+                        }
+                    ]
+                });
+                chart.render();
+            };
+        </script>
+    </div>
+    <div style="position: inherit; bottom: 10px;">
+
+        @if (Model != null)
+        {
+            <table class="table table-bordered table-hover panel-footer">
+                <tr>
+                    <th>URL</th>
+                    <th>Time elapsed, sec</th>
+                    <th>Min speed,sec</th>
+                    <th>Max speed,sec</th>
+                    <th>Status code</th>
+                </tr>
+                @foreach (var item in @Model)
+                {
+                    <tr>
+                        <td>@item.PageUrl</td>
+                        <td>@item.ResponseTime</td>
+                        <td>@item.BestTime</td>
+                        <td>@item.WorstTime</td>
+                        <td>@item.StatusCode</td>
+                    </tr>
+                }
+            </table>
+        }
+    </div>
+    <footer>
+        <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+    </footer>
+</div>
+</body>
+</html>

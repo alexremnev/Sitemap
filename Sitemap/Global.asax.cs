@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using System.Web.Routing;
+using Castle.Windsor;
+using Castle.Windsor.Installer;
+using Sitemap.Container;
 
 namespace Sitemap
 {
@@ -13,6 +12,10 @@ namespace Sitemap
         {
             AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
+            IWindsorContainer container = new WindsorContainer();
+            container.Install(FromAssembly.This());
+            var controllerFactory = new WindsorControllerFactory(container);
+            ControllerBuilder.Current.SetControllerFactory(controllerFactory);
         }
     }
 }

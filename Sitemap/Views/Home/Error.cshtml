@@ -1,0 +1,20 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width"/>
+    <title>Error</title>
+</head>
+<body>
+<div>
+    <p> A sitemap file doesn't exist at the given url. Please, сheck the correctness of the entered data.</p> 
+</div>
+<div>
+    <input type="button" value="Try again" onclick="location.href = '@Url.Action("Index", "Home")'"/>
+</div>
+</body>
+</html>

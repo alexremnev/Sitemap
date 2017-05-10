@@ -1,0 +1,5 @@
+﻿#tableResult {
+    display: block;
+    height: 300px;
+    overflow-y: scroll;
+}

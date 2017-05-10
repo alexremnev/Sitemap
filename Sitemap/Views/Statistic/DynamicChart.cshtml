@@ -1,0 +1,125 @@
+﻿@{
+    Layout = null;
+}
+@model string
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width"/>
+    <title>DynamicChart</title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet"/>
+    <link href="~/Content/bootstrap-theme.css" rel="stylesheet"/>
+    <link href="~/Content/Styles.css" rel="stylesheet"/>
+    <style>
+        body { background: #f1f1f1; }
+    </style>
+    <script type="text/javascript">
+        window.onload = function() {
+            var counts;
+            var offset = 0;
+            var dataPoints = [];
+            var chart;
+            $.getJSON("/Statistic/GetResult?path=" + "@Model" + "&offset=0",
+                null,
+                function(data) {
+                    $.each(data,
+                        function(key, value) {
+                            counts = parseInt(value[6]);
+                            dataPoints.push({
+                                x: value[0],
+                                y: parseFloat(value[1]),
+                                toolTipContent: value[2] + " ({y} sec)"
+                            });
+                        });
+                    chart = new window.CanvasJS.Chart("chartContainer",
+                    {
+                        zoomEnabled: true,
+                        theme: "theme2",
+                        animationEnabled: true,
+                        title: {
+                            text: "Page load speed"
+                        },
+                        subtitles: [
+                            { text: "" }
+                        ],
+                        axisX: {
+                            valueFormatString: " ",
+                            tickLength: 10,
+                            title: "Urls"
+                        },
+                        axisY: {
+                            title: "Speed, sec"
+                        },
+                        data: [
+                            {
+                                type: "line",
+                                dataPoints: dataPoints
+                            }
+                        ]
+                    });
+                    chart.render();
+                    updateChart();
+                });
+
+            function updateChart() {
+                if (counts - offset !== 1) {
+                    offset++;
+                    $.getJSON("/Statistic/GetResult?path=" + "@Model" + "&offset=" + offset,
+                        null,
+                        function(data) {
+                            $.each(data,
+                                function(key, value) {
+                                    dataPoints.push({
+                                        x: parseInt(value[0]),
+                                        y: parseFloat(value[1]),
+                                        toolTipContent: value[2] + " ({y} sec)"
+                                    });
+                                    $("#tableResult tr:last")
+                                        .after("<tr><td>" +
+                                            value[2] +
+                                            "</td>" +
+                                            "<td>" +
+                                            parseFloat(value[1]) +
+                                            "</td>" +
+                                            "<td>" +
+                                            parseFloat(value[3]) +
+                                            "</td>" +
+                                            "<td>" +
+                                            parseFloat(value[4]) +
+                                            "</td>" +
+                                            "<td>" +
+                                            value[5] +
+                                            "</td></tr>"
+                                        );
+                                });
+
+                            chart.render();
+                            setTimeout(function() { updateChart() }, 100);
+                        });
+                }
+            }
+        }
+    </script>
+    <script type="text/javascript" src="http://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="http://canvasjs.com/assets/script/canvasjs.min.js"></script>
+</head>
+<body>
+<div id="chartContainer" style="height: 300px; width: 100%;"></div>
+<div style="position: inherit; bottom: 10px;">
+
+    @if (Model != null)
+    {
+        <table id="tableResult" class="table table-bordered table-hover panel-footer">
+            <tr>
+                <th>URL</th>
+                <th>Time elapsed, sec</th>
+                <th>Min speed,sec</th>
+                <th>Max speed,sec</th>
+                <th>Status code</th>
+            </tr>
+        </table>
+    }
+</div>
+</body>
+</html>

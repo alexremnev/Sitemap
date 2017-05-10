@@ -1,0 +1,45 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width"/>
+    <link href="~/Content/bootstrap.css" rel="stylesheet"/>
+    <link href="~/Content/bootstrap-theme.css" rel="stylesheet"/>
+    <style>
+        body { background: #f1f1f1; }
+    </style>
+    <title>Idnex</title>
+</head>
+<body>
+<div class="panel-body">
+    @using (Html.BeginForm("Chart", "Statistic", FormMethod.Post))
+    {
+        <div class="form-group">
+            <label>Enter Url:</label>
+            <input type="text" name="url" class="form-control"/>
+        </div>
+        <div class="text-center">
+            <input type="submit" value="OK" class="btn btn-success"/>
+        </div>
+    }
+</div>
+
+@*for dynamic result*@
+<div class="panel-body">
+    @using (Html.BeginForm("DynamicChart", "Statistic", FormMethod.Post))
+    {
+        @Html.ValidationSummary()
+        <div class="form-group">
+            <label>Enter Url for getting dynamic chart:</label>
+            <input type="text" name="url" class="form-control"/>
+        </div>
+        <div class="text-center">
+            <input type="submit" value="OK" class="btn btn-success"/>
+        </div>
+    }
+</div>
+</body>
+</html>
